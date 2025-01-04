@@ -37,20 +37,38 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerCharacter::JumpStarted);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacter::JumpEnded);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Canceled, this, &APlayerCharacter::JumpEnded);
+
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &APlayerCharacter::Attack);
 	}
 }
 
 void APlayerCharacter::Move(const FInputActionValue& Value)
 {
+	float MoveActionValue = Value.Get<float>();
+	
+	if (IsAlive && CanMove)
+	{
+		FVector Direction = FVector::ForwardVector;
+		AddMovementInput(Direction, MoveActionValue);	
+	}
 }
 
 void APlayerCharacter::JumpStarted(const FInputActionValue& Value)
 {
+	if (IsAlive && CanMove)
+	{
+		Jump();
+	}
 }
 
 void APlayerCharacter::JumpEnded(const FInputActionValue& Value)
 {
+	StopJumping();
 }
 
 void APlayerCharacter::Attack(const FInputActionValue& Value)

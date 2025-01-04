@@ -40,6 +40,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UInputAction* AttackAction;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsAlive = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool CanMove = true;
+
 	
 	APlayerCharacter();
 	virtual void BeginPlay() override;
