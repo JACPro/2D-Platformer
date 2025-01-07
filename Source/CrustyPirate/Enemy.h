@@ -6,6 +6,8 @@
 #include "Components/SphereComponent.h"
 #include "PlayerCharacter.h"
 
+#include "Components/TextRenderComponent.h"
+
 #include "Enemy.generated.h"
 
 /**
@@ -21,9 +23,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	APlayerCharacter* FollowTarget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UTextRenderComponent* HPText;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float StopDistanceToTarget = 70.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int HitPoints = 100;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsAlive = true;
@@ -44,7 +52,7 @@ public:
 		int32 OtherBodyIndex);
 
 	bool ShouldMoveToTarget();
-
 	void UpdateDirection(float MoveDirection);
 
+	void UpdateHP(int NewHP);
 };
