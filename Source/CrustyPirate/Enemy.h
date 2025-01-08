@@ -5,7 +5,7 @@
 
 #include "Components/SphereComponent.h"
 #include "PlayerCharacter.h"
-
+#include "PaperZDAnimInstance.h"
 #include "Components/TextRenderComponent.h"
 
 #include "Enemy.generated.h"

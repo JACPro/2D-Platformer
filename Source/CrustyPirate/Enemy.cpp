@@ -112,7 +112,7 @@ void AEnemy::TakeDamage(int DamageAmount, float StunDuration)
 	
 	if (HitPoints > 0.0f)
 	{
-		// Play the take hit animation
+		GetAnimInstance()->JumpToNode(FName("JumpTakeHit"), FName("CrabbyStateMachine"));
 	}
 	else
 	{
@@ -127,5 +127,5 @@ void AEnemy::Die()
 	IsAlive = false;
 	CanMove = false;
 	HPText->SetHiddenInGame(true);
-	// Play the die animation
+	GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CrabbyStateMachine"));
 }
