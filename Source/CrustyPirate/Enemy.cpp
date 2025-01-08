@@ -104,3 +104,28 @@ void AEnemy::UpdateHP(int NewHP)
 	HPText->SetText(FText::FromString(Str));
 }
 
+void AEnemy::TakeDamage(int DamageAmount, float StunDuration)
+{
+	if (!IsAlive) return;
+
+	HitPoints = FMath::Clamp(HitPoints - DamageAmount, 0.0f, HitPoints);
+	
+	if (HitPoints > 0.0f)
+	{
+		// Play the take hit animation
+	}
+	else
+	{
+		Die();
+	}
+	
+	UpdateHP(HitPoints);
+}
+
+void AEnemy::Die()
+{
+	IsAlive = false;
+	CanMove = false;
+	HPText->SetHiddenInGame(true);
+	// Play the die animation
+}

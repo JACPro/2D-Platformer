@@ -92,8 +92,6 @@ void APlayerCharacter::OnAttackOverrideAnimEnd(bool Completed)
 {
 	CanAttack = true;
 	CanMove = true;
-
-	//EnableAttackCollisionBox(false);
 }
 
  void APlayerCharacter::AttackBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -101,8 +99,7 @@ void APlayerCharacter::OnAttackOverrideAnimEnd(bool Completed)
 {
 	if (AEnemy* Enemy = Cast<AEnemy>(OtherActor))
 	{
-		//Enemy->TakeDamage();
-		GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::White, Enemy->GetName());
+		Enemy->TakeDamage(AttackDamage, AttackStunDuration);
 	}
 }
 
@@ -141,8 +138,6 @@ void APlayerCharacter::Attack(const FInputActionValue& Value)
 	{
 		CanAttack = false;
 		CanMove = false;
-
-		//EnableAttackCollisionBox(true);
 
 		GetAnimInstance()->PlayAnimationOverride(AttackAnimSequence, FName("DefaultSlot"), 1.0f,
 			0.0f, OnAttackOverrideEndDelegate);

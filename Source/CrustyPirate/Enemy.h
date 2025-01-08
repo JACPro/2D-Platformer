@@ -55,4 +55,8 @@ public:
 	void UpdateDirection(float MoveDirection);
 
 	void UpdateHP(int NewHP);
+
+	void TakeDamage(int DamageAmount, float StunDuration);
+
+	void Die();
 };
