@@ -3,18 +3,25 @@
 #include "CoreMinimal.h"
 #include "PaperZDCharacter.h"
 
+// Camera
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
+// Input
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Components/InputComponent.h"
 #include "InputActionValue.h"
 #include "GameFramework/Controller.h"
 
+// PaperZD
 #include "PaperZDAnimInstance.h"
 
+// Attack Collision Detection
 #include "Components/BoxComponent.h"
+
+// Timers
+#include "Engine/TimerHandle.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -52,6 +59,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsAlive = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool IsStunned = false;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool CanMove = true;
 
@@ -67,6 +77,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackStunDuration = 0.3f;
 
+	FTimerHandle StunTimer;
+	
 	FZDOnAnimationOverrideEndSignature OnAttackOverrideEndDelegate;
 	
 	APlayerCharacter();
@@ -93,4 +105,7 @@ public:
 	void TakeDamage(int DamageAmount, float StunDuration);
 	void UpdateHP(int NewHP);
 	void Die();
+
+	void Stun(float DurationInSeconds);
+	void OnStunTimerTimeout();
 };

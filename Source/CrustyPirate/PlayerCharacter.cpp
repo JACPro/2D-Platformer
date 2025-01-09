@@ -60,7 +60,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 {
 	float MoveActionValue = Value.Get<float>();
 	
-	if (IsAlive && CanMove)
+	if (IsAlive && CanMove && !IsStunned)
 	{
 		FVector Direction = FVector::ForwardVector;
 		AddMovementInput(Direction, MoveActionValue);
@@ -121,7 +121,7 @@ void APlayerCharacter::EnableAttackCollisionBox(bool Enabled)
 
 void APlayerCharacter::JumpStarted(const FInputActionValue& Value)
 {
-	if (IsAlive && CanMove)
+	if (IsAlive && CanMove && !IsStunned)
 	{
 		Jump();
 	}
@@ -134,7 +134,7 @@ void APlayerCharacter::JumpEnded(const FInputActionValue& Value)
 
 void APlayerCharacter::Attack(const FInputActionValue& Value)
 {
-	if (IsAlive && CanAttack)
+	if (IsAlive && CanAttack && !IsStunned)
 	{
 		CanAttack = false;
 		CanMove = false;
@@ -148,7 +148,7 @@ void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)
 {
 	if (!IsAlive) return;
 
-	//Stun(StunDuration);
+	Stun(StunDuration);
 	HitPoints = FMath::Clamp(HitPoints - DamageAmount, 0.0f, HitPoints);
 
 	if (HitPoints > 0)
@@ -177,4 +177,25 @@ void APlayerCharacter::Die()
 	EnableAttackCollisionBox(false);
 	//HPText->SetHiddenInGame(true);
 	GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CaptainStateMachine"));
+}
+
+void APlayerCharacter::Stun(float DurationInSeconds)
+{
+	IsStunned = true;
+
+	if (GetWorldTimerManager().IsTimerActive(StunTimer))
+	{
+		GetWorldTimerManager().ClearTimer(StunTimer);	
+	}
+	GetWorldTimerManager().SetTimer(StunTimer, this, &APlayerCharacter::OnStunTimerTimeout,
+		1.0f, false, DurationInSeconds);
+
+	// Halts player if mid attack animation
+	GetAnimInstance()->StopAllAnimationOverrides();
+	EnableAttackCollisionBox(false);
+}
+
+void APlayerCharacter::OnStunTimerTimeout()
+{
+	IsStunned = false;
 }
