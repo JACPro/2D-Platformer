@@ -35,6 +35,11 @@ void APlayerCharacter::BeginPlay()
 	AttackCollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::AttackBoxOverlapBegin);
 	
 	EnableAttackCollisionBox(false);
+	CrustyPirateGameInstance = Cast<UCrustyPirateGameInstance>(GetGameInstance());
+ 	if (CrustyPirateGameInstance)
+	{
+		HitPoints = CrustyPirateGameInstance->PlayerHP;
+	}
 
 	if (PlayerHUDClass)
 	{
@@ -182,6 +187,7 @@ void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)
 void APlayerCharacter::UpdateHP(int NewHP)
 {
 	HitPoints = NewHP;
+ 	CrustyPirateGameInstance->SetPlayerHP(HitPoints);
 	PlayerHUDWidget->SetHP(HitPoints);
 }
 
@@ -215,4 +221,21 @@ void APlayerCharacter::Stun(float DurationInSeconds)
 void APlayerCharacter::OnStunTimerTimeout()
 {
 	IsStunned = false;
+}
+
+void APlayerCharacter::CollectItem(CollectableType ItemType)
+{
+	UGameplayStatics::PlaySound2D(GetWorld(), ItemPickupSound);
+
+	switch (ItemType)
+	{
+	case CollectableType::HealthPotion:
+		break;
+	case CollectableType::Diamond:
+		break;
+	case CollectableType::DoubleJumpUpgrade:
+		break;
+	default:
+			break;
+	}
 }

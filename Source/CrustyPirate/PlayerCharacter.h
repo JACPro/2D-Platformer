@@ -23,6 +23,12 @@
 // HUD
 #include "PlayerHUD.h"
 
+#include "CrustyPirateGameInstance.h"
+
+#include "CollectableItem.h"
+
+#include "Sound/SoundBase.h"
+
 // Timers
 #include "Engine/TimerHandle.h"
 
@@ -64,6 +70,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UPlayerHUD* PlayerHUDWidget;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UCrustyPirateGameInstance* CrustyPirateGameInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USoundBase* ItemPickupSound;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsAlive = true;
@@ -117,4 +129,6 @@ public:
 
 	void Stun(float DurationInSeconds);
 	void OnStunTimerTimeout();
+
+	void CollectItem(CollectableType ItemType);
 };
