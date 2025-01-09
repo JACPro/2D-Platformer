@@ -2,6 +2,8 @@
 
 #include "Enemy.h"
 
+#include "Kismet/GameplayStatics.h"
+
 APlayerCharacter::APlayerCharacter() 
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -33,6 +35,20 @@ void APlayerCharacter::BeginPlay()
 	AttackCollisionBox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::AttackBoxOverlapBegin);
 	
 	EnableAttackCollisionBox(false);
+
+	if (PlayerHUDClass)
+	{
+		PlayerHUDWidget = CreateWidget<UPlayerHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0),
+			PlayerHUDClass);
+		if (PlayerHUDWidget)
+		{
+			PlayerHUDWidget->AddToPlayerScreen();
+
+			PlayerHUDWidget->SetHP(HitPoints);
+			PlayerHUDWidget->SetDiamonds(50);
+			PlayerHUDWidget->SetLevel(1);
+		}
+	}
 }
 	
 void APlayerCharacter::Tick(float DeltaTime)
@@ -166,6 +182,7 @@ void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)
 void APlayerCharacter::UpdateHP(int NewHP)
 {
 	HitPoints = NewHP;
+	PlayerHUDWidget->SetHP(HitPoints);
 }
 
 void APlayerCharacter::Die()

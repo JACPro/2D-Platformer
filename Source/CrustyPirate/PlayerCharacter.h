@@ -20,6 +20,9 @@
 // Attack Collision Detection
 #include "Components/BoxComponent.h"
 
+// HUD
+#include "PlayerHUD.h"
+
 // Timers
 #include "Engine/TimerHandle.h"
 
@@ -56,6 +59,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperZDAnimSequence* AttackAnimSequence;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UPlayerHUD> PlayerHUDClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPlayerHUD* PlayerHUDWidget;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsAlive = true;
 
