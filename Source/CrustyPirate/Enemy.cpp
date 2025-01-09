@@ -9,6 +9,9 @@ AEnemy::AEnemy()
 
 	HPText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("HPText"));
 	HPText->SetupAttachment(RootComponent);
+
+	AttackCollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackCollisionBox"));
+	AttackCollisionBox->SetupAttachment(RootComponent);
 }
 
 void AEnemy::BeginPlay()
@@ -21,6 +24,9 @@ void AEnemy::BeginPlay()
 	UpdateHP(HitPoints);
 
 	OnAttackOverrideEndDelegate.BindUObject(this, &AEnemy::OnAttackOverrideAnimEnd);
+
+	AttackCollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AttackBoxOverlapBegin);
+	EnableAttackCollisionBox(false);
 }
 
 void AEnemy::Tick(float DeltaTime)
@@ -134,6 +140,7 @@ void AEnemy::Die()
 	CanMove = false;
 	CanAttack = false;
 	
+	EnableAttackCollisionBox(false);
 	HPText->SetHiddenInGame(true);
 	GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CrabbyStateMachine"));
 }
@@ -151,6 +158,7 @@ void AEnemy::Stun(float DurationInSeconds)
 
 	// Halts enemy if mid attack animation
 	GetAnimInstance()->StopAllAnimationOverrides();
+	EnableAttackCollisionBox(false);
 }
 
 void AEnemy::OnStunTimerTimeout()
@@ -187,6 +195,32 @@ void AEnemy::OnAttackCooldownTimerTimeout()
 	if (IsAlive)
 	{
 		CanAttack = true;
+	}
+}
+
+void AEnemy::AttackBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (APlayerCharacter* Player = Cast<APlayerCharacter>(OtherActor))
+	{
+		//Player->TakeDamage();
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::White, TEXT("Player Take Damage"));
+	}
+}
+
+void AEnemy::EnableAttackCollisionBox(bool Enabled)
+{
+	if (Enabled)
+	{
+		AttackCollisionBox->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		AttackCollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+			ECollisionResponse::ECR_Overlap);
+	}
+	else
+	{
+		AttackCollisionBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		AttackCollisionBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn,
+			ECollisionResponse::ECR_Ignore);
 	}
 }
 

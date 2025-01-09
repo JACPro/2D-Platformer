@@ -7,6 +7,7 @@
 #include "PlayerCharacter.h"
 #include "PaperZDAnimInstance.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/BoxComponent.h"
 
 #include "Engine/TimerHandle.h"
 
@@ -31,6 +32,9 @@ public:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UTextRenderComponent* HPText;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UBoxComponent* AttackCollisionBox;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float StopDistanceToTarget = 70.0f;
@@ -83,4 +87,11 @@ public:
 	void Attack();
 	void OnAttackCooldownTimerTimeout();
 	void OnAttackOverrideAnimEnd(bool Completed);
+
+	UFUNCTION()
+	void AttackBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void EnableAttackCollisionBox(bool Enabled);
 };
