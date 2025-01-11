@@ -80,6 +80,8 @@ void APlayerCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Canceled, this, &APlayerCharacter::JumpEnded);
 
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &APlayerCharacter::Attack);
+
+		EnhancedInputComponent->BindAction(QuitAction, ETriggerEvent::Started, this, &APlayerCharacter::QuitGame);
 	}
 }
 
@@ -172,6 +174,12 @@ void APlayerCharacter::Attack(const FInputActionValue& Value)
 		GetAnimInstance()->PlayAnimationOverride(AttackAnimSequence, FName("DefaultSlot"), 1.0f,
 			0.0f, OnAttackOverrideEndDelegate);
 	}
+}
+
+void APlayerCharacter::QuitGame(const FInputActionValue& Value)
+{
+	UKismetSystemLibrary::QuitGame(GetWorld(), UGameplayStatics::GetPlayerController(GetWorld(), 0),
+		EQuitPreference::Quit, false);
 }
 
 void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)

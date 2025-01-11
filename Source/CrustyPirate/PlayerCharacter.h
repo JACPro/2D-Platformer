@@ -63,6 +63,9 @@ public:
 	UInputAction* AttackAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+    UInputAction* QuitAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UPaperZDAnimSequence* AttackAnimSequence;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -118,7 +121,8 @@ public:
 	void JumpStarted(const FInputActionValue& Value);
 	void JumpEnded(const FInputActionValue& Value);
 	void Attack(const FInputActionValue& Value);
-
+	void QuitGame(const FInputActionValue& Value);
+	
 	void UpdateDirection(float MoveDirection);
 
 	void OnAttackOverrideAnimEnd(bool Completed);
