@@ -98,7 +98,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float AttackStunDuration = 0.3f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float DeathRestartWaitTime = 3.0f;
+
 	FTimerHandle StunTimer;
+	FTimerHandle DeathRestartTimer;
 	
 	FZDOnAnimationOverrideEndSignature OnAttackOverrideEndDelegate;
 	
@@ -126,7 +130,8 @@ public:
 	void TakeDamage(int DamageAmount, float StunDuration);
 	void UpdateHP(int NewHP);
 	void Die();
-
+	void OnDeathRestartTimerTimeout();
+	
 	void Stun(float DurationInSeconds);
 	void OnStunTimerTimeout();
 

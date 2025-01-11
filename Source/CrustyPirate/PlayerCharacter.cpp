@@ -56,7 +56,7 @@ void APlayerCharacter::BeginPlay()
 
 			PlayerHUDWidget->SetHP(HitPoints);
 			PlayerHUDWidget->SetDiamonds(CrustyPirateGameInstance->CollectedDiamondCount);
-			PlayerHUDWidget->SetLevel(1);
+			PlayerHUDWidget->SetLevel(CrustyPirateGameInstance->CurrentLevelIndex);
 		}
 	}
 }
@@ -205,6 +205,14 @@ void APlayerCharacter::Die()
 	EnableAttackCollisionBox(false);
 	//HPText->SetHiddenInGame(true);
 	GetAnimInstance()->JumpToNode(FName("JumpDie"), FName("CaptainStateMachine"));
+	
+	GetWorldTimerManager().SetTimer(DeathRestartTimer, this, &APlayerCharacter::OnDeathRestartTimerTimeout,
+		1.0, false, DeathRestartWaitTime);
+}
+
+void APlayerCharacter::OnDeathRestartTimerTimeout()
+{
+	CrustyPirateGameInstance->RestartGame();
 }
 
 void APlayerCharacter::Stun(float DurationInSeconds)
