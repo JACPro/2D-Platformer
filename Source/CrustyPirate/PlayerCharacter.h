@@ -80,6 +80,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool IsAlive = true;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool IsActive = true;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	bool IsStunned = false;
 	
@@ -137,4 +140,6 @@ public:
 
 	void CollectItem(CollectableType ItemType);
 	void UnlockDoubleJump();
+
+	void Deactivate();
 };

@@ -3,6 +3,7 @@
 #include "Enemy.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 APlayerCharacter::APlayerCharacter() 
 {
@@ -116,8 +117,11 @@ void APlayerCharacter::UpdateDirection(float MoveDirection)
 
 void APlayerCharacter::OnAttackOverrideAnimEnd(bool Completed)
 {
-	CanAttack = true;
-	CanMove = true;
+	if (IsActive  && IsAlive)
+	{
+		CanAttack = true;
+		CanMove = true;
+	}
 }
 
  void APlayerCharacter::AttackBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -173,6 +177,7 @@ void APlayerCharacter::Attack(const FInputActionValue& Value)
 void APlayerCharacter::TakeDamage(int DamageAmount, float StunDuration)
 {
 	if (!IsAlive) return;
+	if (!IsActive) return;
 
 	Stun(StunDuration);
 	HitPoints = FMath::Clamp(HitPoints - DamageAmount, 0.0f, HitPoints);
@@ -266,4 +271,16 @@ void APlayerCharacter::UnlockDoubleJump()
 {
 	JumpMaxCount = 2;
 	CrustyPirateGameInstance->IsDoubleJumpUnlocked = true;
+}
+
+void APlayerCharacter::Deactivate()
+{
+	if (IsActive)
+	{
+		IsActive = false;
+		CanAttack = false;
+		CanMove = false;
+
+		GetCharacterMovement()->StopMovementImmediately();		
+	}
 }
