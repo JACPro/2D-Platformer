@@ -145,5 +145,6 @@ public:
 	void CollectItem(CollectableType ItemType);
 	void UnlockDoubleJump();
 
+	UFUNCTION(BlueprintCallable)
 	void Deactivate();
 };
