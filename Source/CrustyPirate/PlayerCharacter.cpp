@@ -39,6 +39,11 @@ void APlayerCharacter::BeginPlay()
  	if (CrustyPirateGameInstance)
 	{
 		HitPoints = CrustyPirateGameInstance->PlayerHP;
+
+ 		if (CrustyPirateGameInstance->IsDoubleJumpUnlocked)
+ 		{
+ 			UnlockDoubleJump();
+ 		}
 	}
 
 	if (PlayerHUDClass)
@@ -50,7 +55,7 @@ void APlayerCharacter::BeginPlay()
 			PlayerHUDWidget->AddToPlayerScreen();
 
 			PlayerHUDWidget->SetHP(HitPoints);
-			PlayerHUDWidget->SetDiamonds(50);
+			PlayerHUDWidget->SetDiamonds(CrustyPirateGameInstance->CollectedDiamondCount);
 			PlayerHUDWidget->SetLevel(1);
 		}
 	}
@@ -227,15 +232,30 @@ void APlayerCharacter::CollectItem(CollectableType ItemType)
 {
 	UGameplayStatics::PlaySound2D(GetWorld(), ItemPickupSound);
 
+	int HealAmount = 25;
+
 	switch (ItemType)
 	{
 	case CollectableType::HealthPotion:
+		UpdateHP(HitPoints + HealAmount);
 		break;
 	case CollectableType::Diamond:
+		CrustyPirateGameInstance->AddDiamonds(1);
+		PlayerHUDWidget->SetDiamonds(CrustyPirateGameInstance->CollectedDiamondCount);
 		break;
 	case CollectableType::DoubleJumpUpgrade:
+		if (!CrustyPirateGameInstance->IsDoubleJumpUnlocked)
+		{
+			UnlockDoubleJump();
+		}
 		break;
 	default:
 			break;
 	}
+}
+
+void APlayerCharacter::UnlockDoubleJump()
+{
+	JumpMaxCount = 2;
+	CrustyPirateGameInstance->IsDoubleJumpUnlocked = true;
 }
