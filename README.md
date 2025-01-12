@@ -11,6 +11,12 @@ ___
 ___
 
 [Click here to download the .zip Windows Build.](https://github.com/JACPro/UE5-2D-Platformer/raw/refs/heads/main/WindowsBuild.zip?download=)
+Be sure to review the controls below before playing.
+
+CONTROLS:
+- **WASD** - Movement
+- **SPACE** - Jump
+- **RIGHT CLICK** - Attack
 
 ___
 
